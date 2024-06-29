@@ -11,8 +11,16 @@ class Teacher extends Model
     protected $fillable = [
         "first_name",
         'last_name',
+        'gender',
         'phone',
         'address',
         'subject',
+        'user_id',
     ];
+
+    public function student()
+    {
+        return $this->hasMany(Student::class);
+    }
+
 }

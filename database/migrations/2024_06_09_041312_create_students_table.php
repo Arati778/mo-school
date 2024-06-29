@@ -17,8 +17,11 @@ return new class extends Migration
             $table->string('last_name');
             $table->enum('gender',['male','female','other']);
             $table->date('dob');
-            $table->string('address')->nullable();
-            $table->string('phone')->nullable();
+            $table->text('address');
+            $table->string('phone');
+            $table->unsignedBigInteger('user_id');
+            $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
+   
             $table->timestamps();
         });
     }
