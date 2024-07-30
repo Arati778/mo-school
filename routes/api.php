@@ -3,12 +3,15 @@
 use App\Http\Controllers\GuardianController;
 use App\Http\Controllers\StudentController;
 use App\Http\Controllers\TeacherController;
+use App\Http\Controllers\ValidationUserController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/user', function (Request $request) {
     return $request->user();
 })->middleware('auth:sanctum');
+
+Route::post('/validate-otp', [ValidationUserController::class, 'validateOtp']);
 
 Route::post('/teacher', [TeacherController::class, 'teacher']);
 Route::get('/teacher/{id}', [TeacherController::class,'getTeacher']);

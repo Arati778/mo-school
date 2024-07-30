@@ -2,10 +2,12 @@
 
 namespace App\Http\Controllers;
 
+use App\Mail\WelcomeEmail;
 use App\Models\Teacher;
 use App\Models\User;
 use App\Models\Validation_user;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Validator;
 
 class TeacherController extends Controller
@@ -31,6 +33,8 @@ class TeacherController extends Controller
             return response()->json(['error' => $validator->errors()->all()], 400);
         }
 
+
+       $otp = $this->generateOtp(6);
        $user = User::create([
             'name'=> $request->first_name . " " . $request->last_name,
             'email'=>$request->email,
@@ -57,10 +61,12 @@ class TeacherController extends Controller
             return response()->json(['error'=>'Failed to create Teacher'],500);
         }
 
+     
         Validation_user::create([
             'email'=>$user->email,
             'otp'=>$this->generateOtp(6),
         ]);
+        Mail::to($user->email)->send(new WelcomeEmail($otp));
        
         return response()->json(['message'=>'Teacher created successfully', 'data'=> $teacher],201);
     }
@@ -69,15 +75,12 @@ class TeacherController extends Controller
         {
             $otp = '';
             for ($i = 0; $i < $length; $i++) {
-                $otp .= mt_rand(0, 9); // Generate a random digit between 0 and 9
+                $otp .= mt_rand(0, 9); 
             }
             return $otp;
         }
      
-        
-    
-
-    /**
+     /**
      * Show the form for creating a new resource.
      */
     public function getTeacher($id)
